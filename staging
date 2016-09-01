@@ -1,0 +1,6 @@
+[localhost]
+172.16.236.182
+
+[localhost:vars]
+ansible_ssh_user=winters
+ansible_ssh_pass=admin123

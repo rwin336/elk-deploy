@@ -1,0 +1,13 @@
+---
+# tasks file for fireup-elasticsearch
+- name: Create Elastic Search container.
+  docker_container:
+    name: elasticsearch
+    image: elasticsearch
+    state: started
+    volumes: /opt/volume/esdata/node1
+    exposed_ports:
+      - 9200
+      - 9300
+    env:
+      Des.node.name: Node1
