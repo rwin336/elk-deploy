@@ -1,0 +1,14 @@
+#!/usr/bin/python
+from docker import Client
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4)
+
+cli = Client(base_url='unix://var/run/docker.sock')
+
+all_containers = cli.containers()
+elasticsearch_containers_ids = [c['Id'] for c in all_containers if 'elasticsearch' in c['Image']]
+
+for elasticsearch_container_id in elasticsearch_containers_ids:
+    print elasticsearch_container_id,
+    print " ",

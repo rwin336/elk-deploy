@@ -1,0 +1,24 @@
+---
+# tasks file for populate-yahoo-data
+
+- name: Get the Container IDs for any Elasticsearch containers
+  script: ./files/scripts/elastic-search-container-ids
+  register: elastic_search_ids
+
+- debug: var=elastic_search_ids
+
+- name: Query the IP Addresses for Elasticsearch containers
+  shell:  "docker exec {{ item }} hostname -I"
+  register: container_query
+  with_items: "{{ elastic_search_ids.stdout_lines[0] }}"
+  
+- debug: var=container_query
+
+- debug: var=container_query.results[0].stdout
+
+- name: Get IP of query result
+  set_fact:
+    container_ip: "{{ container_query.results[0].stdout | regex_replace('\\s','') }}"
+
+- debug: var=container_ip
+
