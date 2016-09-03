@@ -1,0 +1,32 @@
+---
+# tasks file for fireup-logstash
+
+- name: Create logstash config directory
+  file: path=/opt/volumes/logstash/config-dir state=directory mode=0777
+  become: yes
+  become_method: sudo
+
+- name: Copy logstash config file to config directory
+  copy: src=./files/logstash.conf dest=/opt/volumes/logstash/config-dir/logstash.conf
+
+- name: Create data input directory
+  file: path=/opt/volumes/logstash/input state=directory mode=0777
+  become: yes
+  become_method: sudo
+
+- name: Copy google stack data file to input directory
+  copy: src=./files/goog.csv dest=/opt/volumes/logstash/input/GOOG.csv
+
+- name: Start logstash container
+  docker_container:
+    name: logstash
+    image: logstash
+    command: logstash -f /config-dir/logstash.conf
+    state: started
+    volumes:
+    - /opt/volumes/logstash/config-dir:/config-dir
+    - /opt/volumes/logstash/input:/input
+    exposed_ports:
+    - 5044
+    ports:
+    - "5044:5044"
